@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import TopNav from "@/components/TopNav";
 import Sidebar from "@/components/Sidebar";
-import WorldMap from "@/components/WorldMap";
+import GeoMap from "@/components/GeoMap";
 import ThreatTable from "@/components/ThreatTable";
 import StatsBar from "@/components/StatsBar";
+import AlertSystem from "@/components/AlertSystem";
 import StaticUploadPanel from "@/components/panels/StaticUploadPanel";
 import LiveApiPanel from "@/components/panels/LiveApiPanel";
 import ImageScannerPanel from "@/components/panels/ImageScannerPanel";
@@ -76,10 +77,12 @@ const Index = () => {
         {/* Main Content */}
         <main className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-cyber">
           <StatsBar threats={threats} />
-          <WorldMap threats={threats} />
+          <GeoMap threats={threats} />
           <ThreatTable threats={threats} />
         </main>
       </div>
+
+      <AlertSystem threats={threats} />
     </div>
   );
 };
