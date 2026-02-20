@@ -4,6 +4,7 @@ import TopNav from "@/components/TopNav";
 import Sidebar from "@/components/Sidebar";
 import GeoMap from "@/components/GeoMap";
 import ThreatTable from "@/components/ThreatTable";
+import AttackHistory from "@/components/AttackHistory";
 import StatsBar from "@/components/StatsBar";
 import AlertSystem from "@/components/AlertSystem";
 import StaticUploadPanel from "@/components/panels/StaticUploadPanel";
@@ -78,6 +79,7 @@ const Index = () => {
         <main className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-cyber">
           <StatsBar threats={threats} />
           <GeoMap threats={threats} />
+          <AttackHistory threats={threats} />
           <ThreatTable threats={threats} />
         </main>
       </div>
