@@ -1,4 +1,4 @@
-import { Upload, Radio, ScanLine, QrCode, BarChart3, Settings } from "lucide-react";
+import { Upload, Radio, Globe, ScanLine, QrCode, BarChart3, Settings } from "lucide-react";
 
 interface SidebarProps {
   activePanel: string;
@@ -8,6 +8,7 @@ interface SidebarProps {
 const sidebarItems = [
   { id: 'upload', label: 'Static Data', icon: Upload },
   { id: 'api', label: 'Live API', icon: Radio },
+  { id: 'rest-api', label: 'REST API', icon: Globe },
   { id: 'image-scan', label: 'Image Scan', icon: ScanLine },
   { id: 'barcode', label: 'Barcode', icon: QrCode },
   { id: 'stats', label: 'Statistics', icon: BarChart3 },
