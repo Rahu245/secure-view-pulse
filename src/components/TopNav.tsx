@@ -1,5 +1,4 @@
-import { Shield, Activity, Key, Brain, ShieldCheck } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Shield, Activity } from "lucide-react";
 
 interface TopNavProps {
   activeTab: string;
@@ -7,14 +6,8 @@ interface TopNavProps {
 }
 
 const navItems = ['Overview', 'Analytics', 'Threat Map', 'Scanner', 'API Manager'];
-const pageNavItems = [
-  { label: 'API Keys', icon: Key, path: '/api-keys' },
-  { label: 'AI Summary', icon: Brain, path: '/ai-summary' },
-  { label: 'AI Recommendations', icon: ShieldCheck, path: '/ai-recommendations' },
-];
 
 const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
-  const navigate = useNavigate();
   return (
     <header className="h-14 border-b border-border bg-card/80 backdrop-blur-md flex items-center px-4 gap-4 sticky top-0 z-50">
       <div className="flex items-center gap-2 mr-6">
@@ -32,17 +25,6 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
             className={`cyber-btn text-xs px-3 py-1.5 ${activeTab === item ? 'active' : ''}`}
           >
             {item}
-          </button>
-        ))}
-        <div className="w-px h-5 bg-border mx-1" />
-        {pageNavItems.map((item) => (
-          <button
-            key={item.label}
-            onClick={() => navigate(item.path)}
-            className="cyber-btn text-xs px-3 py-1.5"
-          >
-            <item.icon className="w-3.5 h-3.5" />
-            {item.label}
           </button>
         ))}
       </nav>

@@ -133,18 +133,41 @@ const GeoMap = ({ threats }: GeoMapProps) => {
     });
   }, [displayThreats, attackOrigins]);
 
+  const handleRecenter = () => {
+    mapRef.current?.setView([25, 10], 2, { animate: true });
+  };
+
+  const handleZoomIn = () => {
+    mapRef.current?.zoomIn(1, { animate: true });
+  };
+
+  const handleZoomOut = () => {
+    mapRef.current?.zoomOut(1, { animate: true });
+  };
+
   return (
     <div className="cyber-card overflow-hidden relative">
       <div className="flex items-center justify-between p-4 pb-0">
         <h2 className="text-sm font-semibold text-foreground">Geospatial Risk Map</h2>
-        <div className="flex items-center gap-3 text-[10px]">
-          {Object.entries(severityColors).map(([level, color]) => (
-            <div key={level} className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-              <span className="capitalize text-muted-foreground">{level}</span>
-            </div>
-          ))}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            <button onClick={handleZoomIn} className="cyber-btn text-[10px] px-2 py-1">+</button>
+            <button onClick={handleZoomOut} className="cyber-btn text-[10px] px-2 py-1">−</button>
+            <button onClick={handleRecenter} className="cyber-btn text-[10px] px-2 py-1">⌂</button>
+          </div>
+          <div className="flex items-center gap-3 text-[10px]">
+            {Object.entries(severityColors).map(([level, color]) => (
+              <div key={level} className="flex items-center gap-1">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="capitalize text-muted-foreground">{level}</span>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
+      <div className="absolute top-12 left-4 z-10 flex flex-col gap-1 text-[10px] font-mono text-muted-foreground bg-card/80 backdrop-blur-sm rounded-lg border border-border p-2">
+        <div>Live Threats: <span className="text-primary font-bold">{displayThreats.length}</span></div>
+        <div>Origins: <span className="text-primary font-bold">{attackOrigins.length}</span></div>
       </div>
       <div
         ref={containerRef}
