@@ -165,7 +165,7 @@ const GeoMap = ({ threats }: GeoMapProps) => {
           </div>
         </div>
       </div>
-      <div className="absolute top-12 left-4 z-10 flex flex-col gap-1 text-[10px] font-mono text-muted-foreground bg-card/80 backdrop-blur-sm rounded-lg border border-border p-2">
+      <div className="absolute top-12 right-4 z-10 flex flex-col gap-1 text-[10px] font-mono text-muted-foreground bg-card/80 backdrop-blur-sm rounded-lg border border-border p-2">
         <div>Live Threats: <span className="text-primary font-bold">{displayThreats.length}</span></div>
         <div>Origins: <span className="text-primary font-bold">{attackOrigins.length}</span></div>
       </div>
