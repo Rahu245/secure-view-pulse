@@ -15,7 +15,9 @@ import BarcodeScannerPanel from "@/components/panels/BarcodeScannerPanel";
 import StatsPanel from "@/components/panels/StatsPanel";
 import SettingsPanel from "@/components/panels/SettingsPanel";
 import NmapScannerPanel from "@/components/panels/NmapScannerPanel";
+import SecurityToolPanel from "@/components/panels/SecurityToolPanel";
 import { mockThreats, generateThreat, COUNTRIES } from "@/data/mockThreats";
+import { getToolById } from "@/data/securityTools";
 import type { ThreatData } from "@/data/mockThreats";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown, Globe } from "lucide-react";
@@ -52,6 +54,11 @@ const Index = () => {
     }
   };
 
+  const securityToolPanel = (() => {
+    const tool = getToolById(activePanel);
+    return tool ? <SecurityToolPanel tool={tool} /> : null;
+  })();
+
   const panelComponents: Record<string, React.ReactNode> = {
     upload: <StaticUploadPanel onDataLoaded={() => {}} />,
     api: <LiveApiPanel />,
@@ -63,6 +70,8 @@ const Index = () => {
     settings: <SettingsPanel />,
   };
 
+  const currentPanel = panelComponents[activePanel] || securityToolPanel;
+
   return (
     <div className="min-h-screen flex flex-col">
       <TopNav activeTab={activeTab} onTabChange={handleTabChange} />
@@ -72,7 +81,7 @@ const Index = () => {
 
         {/* Side Panel */}
         <AnimatePresence>
-          {activePanel && (
+          {activePanel && currentPanel && (
             <motion.div
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 280, opacity: 1 }}
@@ -81,7 +90,7 @@ const Index = () => {
               className="border-r border-border bg-card/40 backdrop-blur-md overflow-hidden"
             >
               <div className="w-[280px] p-4 h-full overflow-y-auto scrollbar-cyber">
-                {panelComponents[activePanel]}
+                {currentPanel}
               </div>
             </motion.div>
           )}
