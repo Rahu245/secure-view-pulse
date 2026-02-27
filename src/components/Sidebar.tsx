@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {
   Upload, Radio, Globe, ScanLine, QrCode, BarChart3, Settings,
-  Key, Brain, ShieldCheck, Radar, ChevronDown, Search,
-  Shield, Bug, Globe2, MonitorCheck, HardDrive,
+  Key, Brain, ShieldCheck, Radar, ChevronRight, Search,
+  Shield, Bug, Globe2, MonitorCheck, HardDrive, Bot,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toolCategories } from "@/data/securityTools";
@@ -61,51 +61,88 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
     : toolCategories;
 
   return (
-    <aside className="w-[72px] hover:w-[220px] group/sidebar transition-all duration-200 border-r border-border bg-card/60 backdrop-blur-md flex flex-col py-3 gap-0.5 overflow-y-auto overflow-x-hidden scrollbar-cyber">
+    <aside className="w-[200px] border-r border-border bg-card/60 backdrop-blur-md flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber">
+      {/* Search */}
+      <div className="px-3 mb-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search tools…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-muted/50 border border-border rounded-md text-xs py-1.5 pl-7 pr-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
+      </div>
+
+      {/* IP Agent button */}
+      <div className="px-2 mb-1">
+        <button
+          onClick={() => onPanelChange(activePanel === 'ip-agent' ? '' : 'ip-agent')}
+          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all ${
+            activePanel === 'ip-agent'
+              ? 'bg-primary/15 text-primary border border-primary/30'
+              : 'text-foreground hover:bg-muted/60 border border-transparent'
+          }`}
+        >
+          <Bot className="w-4 h-4 shrink-0" />
+          <span>IP Agent</span>
+          <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">AI</span>
+        </button>
+      </div>
+
+      <div className="h-px bg-border mx-3 my-1" />
+
+      {/* Section label */}
+      <div className="px-3 py-1">
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Core Tools</span>
+      </div>
+
       {/* Core tools */}
       {panelItems.map((item) => (
         <button
           key={item.id}
           onClick={() => onPanelChange(activePanel === item.id ? '' : item.id)}
-          className={`cyber-sidebar-btn flex items-center gap-2 px-2 ${activePanel === item.id ? 'active' : ''}`}
+          className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
+            activePanel === item.id
+              ? 'bg-primary/10 text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+          }`}
         >
-          <item.icon className="w-5 h-5 shrink-0" />
-          <span className="text-[10px] leading-tight whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">
-            {item.label}
-          </span>
+          <item.icon className="w-3.5 h-3.5 shrink-0" />
+          <span>{item.label}</span>
         </button>
       ))}
 
-      <div className="w-10 h-px bg-border my-1 mx-auto" />
+      <div className="h-px bg-border mx-3 my-1" />
+
+      {/* Section label */}
+      <div className="px-3 py-1">
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Pages</span>
+      </div>
 
       {/* Page navigation */}
       {pageItems.map((item) => (
         <button
           key={item.path}
           onClick={() => navigate(item.path)}
-          className={`cyber-sidebar-btn flex items-center gap-2 px-2 ${location.pathname === item.path ? 'active' : ''}`}
+          className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
+            location.pathname === item.path
+              ? 'bg-primary/10 text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+          }`}
         >
-          <item.icon className="w-5 h-5 shrink-0" />
-          <span className="text-[10px] leading-tight whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">
-            {item.label}
-          </span>
+          <item.icon className="w-3.5 h-3.5 shrink-0" />
+          <span>{item.label}</span>
         </button>
       ))}
 
-      <div className="w-10 h-px bg-border my-1 mx-auto" />
+      <div className="h-px bg-border mx-3 my-1" />
 
-      {/* Search – visible on hover */}
-      <div className="px-2 opacity-0 group-hover/sidebar:opacity-100 transition-opacity h-0 group-hover/sidebar:h-auto overflow-hidden">
-        <div className="relative mb-1">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search tools…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-muted/50 border border-border rounded text-[10px] py-1 pl-6 pr-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-        </div>
+      {/* Section label */}
+      <div className="px-3 py-1">
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Security Tools</span>
       </div>
 
       {/* Security tool categories */}
@@ -117,26 +154,22 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
           <div key={cat.id}>
             <button
               onClick={() => toggleCategory(cat.id)}
-              className="cyber-sidebar-btn flex items-center gap-2 px-2 w-full"
+              className="mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs w-[calc(100%-16px)] transition-all text-muted-foreground hover:text-foreground hover:bg-muted/40"
             >
-              <CatIcon className="w-5 h-5 shrink-0 text-primary/70" />
-              <span className="text-[10px] leading-tight whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity flex-1 text-left">
-                {cat.label}
-              </span>
-              <ChevronDown
-                className={`w-3 h-3 shrink-0 text-muted-foreground transition-transform opacity-0 group-hover/sidebar:opacity-100 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
+              <CatIcon className="w-3.5 h-3.5 shrink-0 text-primary/70" />
+              <span className="flex-1 text-left">{cat.label}</span>
+              <ChevronRight
+                className={`w-3 h-3 shrink-0 transition-transform ${isExpanded ? "rotate-90" : ""}`}
               />
             </button>
 
             {isExpanded && (
-              <div className="flex flex-col gap-0.5 opacity-0 group-hover/sidebar:opacity-100 transition-opacity">
+              <div className="flex flex-col gap-0.5 ml-4 mr-2 mb-1">
                 {cat.tools.map((tool) => (
                   <button
                     key={tool.id}
                     onClick={() => onPanelChange(activePanel === tool.id ? "" : tool.id)}
-                    className={`flex items-center gap-2 px-2 pl-8 py-1.5 text-[10px] rounded transition-colors whitespace-nowrap ${
+                    className={`flex items-center gap-2 px-2.5 py-1.5 text-[11px] rounded-md transition-colors ${
                       activePanel === tool.id
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
@@ -144,10 +177,10 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
                   >
                     <span
                       className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                        tool.status === "ready" ? "bg-green-500" : "bg-muted-foreground/40"
+                        tool.status === "ready" ? "bg-cyber-green" : "bg-muted-foreground/40"
                       }`}
                     />
-                    {tool.name}
+                    <span>{tool.name}</span>
                   </button>
                 ))}
               </div>

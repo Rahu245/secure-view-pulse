@@ -16,6 +16,7 @@ import StatsPanel from "@/components/panels/StatsPanel";
 import SettingsPanel from "@/components/panels/SettingsPanel";
 import NmapScannerPanel from "@/components/panels/NmapScannerPanel";
 import SecurityToolPanel from "@/components/panels/SecurityToolPanel";
+import IpAgentPanel from "@/components/panels/IpAgentPanel";
 import { mockThreats, generateThreat, COUNTRIES } from "@/data/mockThreats";
 import { getToolById } from "@/data/securityTools";
 import type { ThreatData } from "@/data/mockThreats";
@@ -68,6 +69,7 @@ const Index = () => {
     nmap: <NmapScannerPanel />,
     stats: <StatsPanel threats={filteredThreats} />,
     settings: <SettingsPanel />,
+    'ip-agent': <IpAgentPanel />,
   };
 
   const currentPanel = panelComponents[activePanel] || securityToolPanel;
@@ -84,12 +86,12 @@ const Index = () => {
           {activePanel && currentPanel && (
             <motion.div
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 280, opacity: 1 }}
+              animate={{ width: activePanel === 'ip-agent' ? 360 : 280, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
               className="border-r border-border bg-card/40 backdrop-blur-md overflow-hidden"
             >
-              <div className="w-[280px] p-4 h-full overflow-y-auto scrollbar-cyber">
+              <div className={`${activePanel === 'ip-agent' ? 'w-[360px]' : 'w-[280px]'} p-4 h-full overflow-y-auto scrollbar-cyber`}>
                 {currentPanel}
               </div>
             </motion.div>
