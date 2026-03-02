@@ -180,7 +180,7 @@ const IpAgentPanel = () => {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Bot className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-foreground">IP Intelligence Agent</span>
+          <span className="text-xs font-semibold text-foreground">Cyber Security Agent</span>
         </div>
         {messages.length > 0 && (
           <button onClick={() => setMessages([])} className="text-muted-foreground hover:text-foreground">
@@ -190,7 +190,7 @@ const IpAgentPanel = () => {
       </div>
 
       <p className="text-[10px] text-muted-foreground mb-3">
-        Enter an IP address and ask about recent attacks, activities, geolocation, or request analytics with graphs.
+        Ask about IP threats, get security advice, generate action plans, or request analytics with charts.
       </p>
 
       {/* Messages */}
@@ -202,8 +202,9 @@ const IpAgentPanel = () => {
             <div className="space-y-1">
               {[
                 "What attacks came from 192.168.1.1?",
-                "Show me attack analytics for 10.0.0.5",
-                "Graph the threat types for 203.0.113.50",
+                "How do I respond to a ransomware incident?",
+                "Generate a server hardening checklist",
+                "What firewall rules should I set up?",
               ].map((q) => (
                 <button
                   key={q}
@@ -256,7 +257,7 @@ const IpAgentPanel = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          placeholder="Ask about an IP address…"
+          placeholder="Ask anything about cybersecurity…"
           className="flex-1 bg-muted/50 border border-border rounded-md text-xs py-2 px-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           disabled={isLoading}
         />
