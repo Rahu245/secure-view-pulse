@@ -36,8 +36,8 @@ const IpAgentPanel = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async () => {
-    const text = input.trim();
+  const sendMessage = async (overrideText?: string) => {
+    const text = (overrideText ?? input).trim();
     if (!text || isLoading) return;
 
     const userMsg: Message = { role: "user", content: text };
@@ -208,8 +208,8 @@ const IpAgentPanel = () => {
               ].map((q) => (
                 <button
                   key={q}
-                  onClick={() => setInput(q)}
-                  className="block w-full text-[10px] text-left px-2 py-1.5 rounded bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => sendMessage(q)}
+                  className="block w-full text-[10px] text-left px-2 py-1.5 rounded bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   {q}
                 </button>
@@ -262,7 +262,7 @@ const IpAgentPanel = () => {
           disabled={isLoading}
         />
         <button
-          onClick={sendMessage}
+          onClick={() => sendMessage()}
           disabled={isLoading || !input.trim()}
           className="px-2.5 py-2 rounded-md bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 disabled:opacity-40 transition-colors"
         >
