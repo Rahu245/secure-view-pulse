@@ -1,6 +1,12 @@
 import { Settings, Bell, Shield, Database } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
-const SettingsPanel = () => {
+interface SettingsPanelProps {
+  alertsEnabled: boolean;
+  onAlertsEnabledChange: (enabled: boolean) => void;
+}
+
+const SettingsPanel = ({ alertsEnabled, onAlertsEnabledChange }: SettingsPanelProps) => {
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -14,9 +20,7 @@ const SettingsPanel = () => {
             <Bell className="w-4 h-4 text-primary" />
             <span>Alert Notifications</span>
           </div>
-          <div className="w-8 h-4 rounded-full bg-primary/30 relative cursor-pointer">
-            <div className="w-4 h-4 rounded-full bg-primary absolute right-0 top-0" />
-          </div>
+          <Switch checked={alertsEnabled} onCheckedChange={onAlertsEnabledChange} />
         </div>
 
         <div className="cyber-card p-3 flex items-center justify-between">
@@ -24,9 +28,7 @@ const SettingsPanel = () => {
             <Shield className="w-4 h-4 text-cyber-yellow" />
             <span>Auto-block Critical</span>
           </div>
-          <div className="w-8 h-4 rounded-full bg-muted relative cursor-pointer">
-            <div className="w-4 h-4 rounded-full bg-muted-foreground absolute left-0 top-0" />
-          </div>
+          <Switch />
         </div>
 
         <div className="cyber-card p-3 flex items-center justify-between">

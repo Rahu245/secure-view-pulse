@@ -29,6 +29,7 @@ const Index = () => {
   const [activePanel, setActivePanel] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("all");
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
+  const [alertsEnabled, setAlertsEnabled] = useState(true);
   const navigate = useNavigate();
 
   // Simulate live incoming threats
@@ -68,7 +69,7 @@ const Index = () => {
     barcode: <BarcodeScannerPanel />,
     nmap: <NmapScannerPanel />,
     stats: <StatsPanel threats={filteredThreats} />,
-    settings: <SettingsPanel />,
+    settings: <SettingsPanel alertsEnabled={alertsEnabled} onAlertsEnabledChange={setAlertsEnabled} />,
     'ip-agent': <IpAgentPanel />,
   };
 
@@ -165,7 +166,7 @@ const Index = () => {
         </main>
       </div>
 
-      <AlertSystem threats={filteredThreats} />
+      {alertsEnabled && <AlertSystem threats={filteredThreats} />}
     </div>
   );
 };
