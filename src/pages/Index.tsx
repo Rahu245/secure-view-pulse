@@ -166,7 +166,7 @@ const Index = () => {
         </main>
       </div>
 
-      <AlertSystem threats={filteredThreats} />
+      {alertsEnabled && <AlertSystem threats={filteredThreats} />}
     </div>
   );
 };
