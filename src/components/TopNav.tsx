@@ -1,16 +1,22 @@
-import { Shield, Activity } from "lucide-react";
+import { Shield, Activity, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 
-interface TopNavProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
+const navItems = [
+  { label: "Dashboard", path: "/" },
+  { label: "Analytics", path: "/analytics" },
+  { label: "AI Summary", path: "/ai-summary" },
+  { label: "AI Recs", path: "/ai-recommendations" },
+];
 
-const navItems = ['Overview', 'Analytics', 'Threat Map', 'Scanner', 'API Manager'];
+const TopNav = () => {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
   return (
     <header className="h-14 border-b border-border bg-card/80 backdrop-blur-md flex items-center px-4 gap-4 sticky top-0 z-50">
-      <div className="flex items-center gap-2 mr-6">
+      <div className="flex items-center gap-2 mr-6 cursor-pointer" onClick={() => navigate("/")}>
         <Shield className="w-6 h-6 text-primary cyber-glow-text" />
         <h1 className="text-base font-bold tracking-tight text-foreground">
           Cyber Threat <span className="text-primary">Intelligence</span>
@@ -20,11 +26,11 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
       <nav className="flex items-center gap-1 flex-1">
         {navItems.map((item) => (
           <button
-            key={item}
-            onClick={() => onTabChange(item)}
-            className={`cyber-btn text-xs px-3 py-1.5 ${activeTab === item ? 'active' : ''}`}
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className={`cyber-btn text-xs px-3 py-1.5 ${location.pathname === item.path ? "active" : ""}`}
           >
-            {item}
+            {item.label}
           </button>
         ))}
       </nav>
@@ -35,10 +41,13 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
           <span className="text-muted-foreground">Cloud</span>
           <span className="text-cyber-green font-medium">Connected</span>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted border border-border">
-          <div className="pulse-dot online" />
-          <span className="text-muted-foreground">Live</span>
-        </div>
+        <button
+          onClick={signOut}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted border border-border text-muted-foreground hover:text-destructive transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Sign Out</span>
+        </button>
       </div>
     </header>
   );

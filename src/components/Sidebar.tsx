@@ -7,26 +7,21 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { toolCategories } from "@/data/securityTools";
 
-interface SidebarProps {
-  activePanel: string;
-  onPanelChange: (panel: string) => void;
-}
-
 const panelItems = [
-  { id: 'upload', label: 'Static Data', icon: Upload },
-  { id: 'api', label: 'Live API', icon: Radio },
-  { id: 'rest-api', label: 'REST API', icon: Globe },
-  { id: 'image-scan', label: 'Image Scan', icon: ScanLine },
-  { id: 'barcode', label: 'Barcode', icon: QrCode },
-  { id: 'nmap', label: 'Nmap', icon: Radar },
-  { id: 'stats', label: 'Statistics', icon: BarChart3 },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: "upload", label: "Static Data", icon: Upload, path: "/upload" },
+  { id: "api", label: "Live API", icon: Radio, path: "/live-api" },
+  { id: "rest-api", label: "REST API", icon: Globe, path: "/rest-api" },
+  { id: "image-scan", label: "Image Scan", icon: ScanLine, path: "/image-scan" },
+  { id: "barcode", label: "Barcode", icon: QrCode, path: "/barcode" },
+  { id: "nmap", label: "Nmap", icon: Radar, path: "/nmap" },
+  { id: "stats", label: "Statistics", icon: BarChart3, path: "/stats" },
+  { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
 ];
 
 const pageItems = [
-  { label: 'API Keys', icon: Key, path: '/api-keys' },
-  { label: 'AI Summary', icon: Brain, path: '/ai-summary' },
-  { label: 'AI Recs', icon: ShieldCheck, path: '/ai-recommendations' },
+  { label: "API Keys", icon: Key, path: "/api-keys" },
+  { label: "AI Summary", icon: Brain, path: "/ai-summary" },
+  { label: "AI Recs", icon: ShieldCheck, path: "/ai-recommendations" },
 ];
 
 const categoryIcons: Record<string, React.ElementType> = {
@@ -37,7 +32,7 @@ const categoryIcons: Record<string, React.ElementType> = {
   "forensics": HardDrive,
 };
 
-const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
@@ -60,8 +55,10 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
         .filter((cat) => cat.tools.length > 0)
     : toolCategories;
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <aside className="w-[200px] border-r border-border bg-card/60 backdrop-blur-md flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber">
+    <aside className="w-[200px] border-r border-border bg-card/60 backdrop-blur-md flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber shrink-0">
       {/* Search */}
       <div className="px-3 mb-2">
         <div className="relative">
@@ -79,11 +76,11 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
       {/* IP Agent button */}
       <div className="px-2 mb-1">
         <button
-          onClick={() => onPanelChange(activePanel === 'ip-agent' ? '' : 'ip-agent')}
+          onClick={() => navigate("/ip-agent")}
           className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all ${
-            activePanel === 'ip-agent'
-              ? 'bg-primary/15 text-primary border border-primary/30'
-              : 'text-foreground hover:bg-muted/60 border border-transparent'
+            isActive("/ip-agent")
+              ? "bg-primary/15 text-primary border border-primary/30"
+              : "text-foreground hover:bg-muted/60 border border-transparent"
           }`}
         >
           <Bot className="w-4 h-4 shrink-0" />
@@ -103,11 +100,11 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
       {panelItems.map((item) => (
         <button
           key={item.id}
-          onClick={() => onPanelChange(activePanel === item.id ? '' : item.id)}
+          onClick={() => navigate(item.path)}
           className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
-            activePanel === item.id
-              ? 'bg-primary/10 text-primary'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+            isActive(item.path)
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
           }`}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
@@ -128,9 +125,9 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
           key={item.path}
           onClick={() => navigate(item.path)}
           className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
-            location.pathname === item.path
-              ? 'bg-primary/10 text-primary'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+            isActive(item.path)
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
           }`}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
@@ -168,9 +165,9 @@ const Sidebar = ({ activePanel, onPanelChange }: SidebarProps) => {
                 {cat.tools.map((tool) => (
                   <button
                     key={tool.id}
-                    onClick={() => onPanelChange(activePanel === tool.id ? "" : tool.id)}
+                    onClick={() => navigate(`/tool/${tool.id}`)}
                     className={`flex items-center gap-2 px-2.5 py-1.5 text-[11px] rounded-md transition-colors ${
-                      activePanel === tool.id
+                      isActive(`/tool/${tool.id}`)
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                     }`}
