@@ -90,7 +90,7 @@ const StaticUploadPanel = ({ onDataLoaded }: StaticUploadPanelProps) => {
             </table>
           </div>
           <button
-            onClick={() => setStatus('loaded')}
+            onClick={() => { setStatus('loaded'); onDataLoaded([]); }}
             className="cyber-btn active text-xs w-full justify-center"
           >
             Visualize on Map
