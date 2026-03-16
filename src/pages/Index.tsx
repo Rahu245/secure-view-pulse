@@ -53,7 +53,7 @@ const Index = () => {
             To view the dashboard, you need to load threat data first. Upload a data file or connect a live API feed.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-3 gap-4 w-full">
           <button
             onClick={() => navigate("/upload")}
             className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group"
@@ -69,6 +69,19 @@ const Index = () => {
             <Radio className="w-8 h-8 text-secondary group-hover:scale-110 transition-transform" />
             <span className="text-sm font-medium text-foreground">Connect API</span>
             <span className="text-[10px] text-muted-foreground">Live threat feed</span>
+          </button>
+          <button
+            onClick={() => {
+              const t = [...mockThreats];
+              for (let i = 0; i < 10; i++) t.unshift(generateThreat());
+              setThreats(t);
+              setDataLoaded(true);
+            }}
+            className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group"
+          >
+            <Globe className="w-8 h-8 text-cyber-green group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-medium text-foreground">Demo Mode</span>
+            <span className="text-[10px] text-muted-foreground">Use sample data</span>
           </button>
         </div>
       </div>
