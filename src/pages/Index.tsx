@@ -63,18 +63,12 @@ const Index = () => {
             <span className="text-[10px] text-muted-foreground">CSV or JSON files</span>
           </button>
           <button
-            onClick={() => {
-              // Quick start with mock data
-              const t = [...mockThreats];
-              for (let i = 0; i < 10; i++) t.unshift(generateThreat());
-              setThreats(t);
-              setDataLoaded(true);
-            }}
+            onClick={() => navigate("/live-api")}
             className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group"
           >
             <Radio className="w-8 h-8 text-secondary group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-medium text-foreground">Demo Mode</span>
-            <span className="text-[10px] text-muted-foreground">Use sample data</span>
+            <span className="text-sm font-medium text-foreground">Connect API</span>
+            <span className="text-[10px] text-muted-foreground">Live threat feed</span>
           </button>
         </div>
       </div>
