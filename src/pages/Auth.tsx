@@ -92,21 +92,35 @@ const Auth = () => {
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-3 py-2.5 text-sm bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-                minLength={6}
-              />
+          {!forgotMode && (
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-3 py-2.5 text-sm bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
-          </div>
+          )}
+
+          {isLogin && !forgotMode && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => setForgotMode(true)}
+                className="text-xs text-primary hover:underline"
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
 
           <button
             type="submit"
@@ -117,7 +131,7 @@ const Auth = () => {
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                {isLogin ? "Sign In" : "Create Account"}
+                {forgotMode ? "Send Reset Link" : isLogin ? "Sign In" : "Create Account"}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
