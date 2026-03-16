@@ -11,6 +11,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
 
   if (loading) {
     return (
@@ -24,15 +25,24 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email) return;
     setSubmitting(true);
 
     try {
-      if (isLogin) {
+      if (forgotMode) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Check your email for a password reset link");
+        setForgotMode(false);
+      } else if (isLogin) {
+        if (!password) return;
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Signed in successfully");
       } else {
+        if (!password) return;
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -60,7 +70,7 @@ const Auth = () => {
             Cyber Threat <span className="text-primary">Intelligence</span>
           </h1>
           <p className="text-sm text-muted-foreground">
-            {isLogin ? "Sign in to access the dashboard" : "Create an account to get started"}
+            {forgotMode ? "Enter your email to reset your password" : isLogin ? "Sign in to access the dashboard" : "Create an account to get started"}
           </p>
         </div>
 
@@ -81,21 +91,35 @@ const Auth = () => {
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-3 py-2.5 text-sm bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-                minLength={6}
-              />
+          {!forgotMode && (
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-3 py-2.5 text-sm bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
-          </div>
+          )}
+
+          {isLogin && !forgotMode && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => setForgotMode(true)}
+                className="text-xs text-primary hover:underline"
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
 
           <button
             type="submit"
@@ -106,7 +130,7 @@ const Auth = () => {
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                {isLogin ? "Sign In" : "Create Account"}
+                {forgotMode ? "Send Reset Link" : isLogin ? "Sign In" : "Create Account"}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -114,13 +138,24 @@ const Auth = () => {
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary hover:underline font-medium"
-          >
-            {isLogin ? "Sign up" : "Sign in"}
-          </button>
+          {forgotMode ? (
+            <button
+              onClick={() => setForgotMode(false)}
+              className="text-primary hover:underline font-medium"
+            >
+              Back to sign in
+            </button>
+          ) : (
+            <>
+              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-primary hover:underline font-medium"
+              >
+                {isLogin ? "Sign up" : "Sign in"}
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>
