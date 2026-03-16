@@ -15,8 +15,10 @@ interface AlertSystemProps {
 }
 
 const severityConfig = {
-  critical: { bg: 'bg-destructive/15', border: 'border-destructive/50', icon: AlertTriangle, label: 'CRITICAL ALERT' },
-  high: { bg: 'bg-cyber-yellow/10', border: 'border-cyber-yellow/40', icon: Shield, label: 'HIGH RISK' },
+  critical: { bg: 'bg-destructive/15', border: 'border-destructive/50', icon: AlertTriangle, label: 'CRITICAL ALERT', color: 'text-destructive', dotBg: 'bg-destructive/20' },
+  high: { bg: 'bg-destructive/10', border: 'border-destructive/40', icon: Shield, label: 'HIGH RISK', color: 'text-destructive', dotBg: 'bg-destructive/15' },
+  medium: { bg: 'bg-cyber-yellow/10', border: 'border-cyber-yellow/40', icon: Shield, label: 'MEDIUM RISK', color: 'text-cyber-yellow', dotBg: 'bg-cyber-yellow/15' },
+  low: { bg: 'bg-cyber-green/10', border: 'border-cyber-green/40', icon: Shield, label: 'LOW RISK', color: 'text-cyber-green', dotBg: 'bg-cyber-green/15' },
 };
 
 const AlertSystem = ({ threats }: AlertSystemProps) => {
