@@ -72,7 +72,7 @@ const AlertSystem = ({ threats }: AlertSystemProps) => {
       <div className="fixed top-16 right-4 z-50 flex flex-col gap-2 w-[340px]">
         <AnimatePresence>
           {alerts.map((alert) => {
-            const config = severityConfig[alert.threat.severity as 'critical' | 'high'];
+            const config = severityConfig[alert.threat.severity as keyof typeof severityConfig];
             if (!config) return null;
             const Icon = config.icon;
 
@@ -86,12 +86,12 @@ const AlertSystem = ({ threats }: AlertSystemProps) => {
                 className={`${config.bg} ${config.border} border rounded-xl p-3 backdrop-blur-lg shadow-2xl`}
               >
                 <div className="flex items-start gap-2">
-                  <div className={`p-1.5 rounded-lg ${alert.threat.severity === 'critical' ? 'bg-destructive/20' : 'bg-cyber-yellow/15'}`}>
-                    <Icon className={`w-4 h-4 ${alert.threat.severity === 'critical' ? 'text-destructive' : 'text-cyber-yellow'}`} />
+                  <div className={`p-1.5 rounded-lg ${config.dotBg}`}>
+                    <Icon className={`w-4 h-4 ${config.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`text-[10px] font-bold tracking-wider uppercase ${alert.threat.severity === 'critical' ? 'text-destructive' : 'text-cyber-yellow'}`}>
+                      <span className={`text-[10px] font-bold tracking-wider uppercase ${config.color}`}>
                         {config.label}
                       </span>
                       <button onClick={() => dismiss(alert.id)} className="text-muted-foreground hover:text-foreground transition-colors">
@@ -115,7 +115,13 @@ const AlertSystem = ({ threats }: AlertSystemProps) => {
                         initial={{ width: '100%' }}
                         animate={{ width: '0%' }}
                         transition={{ duration: 8, ease: 'linear' }}
-                        className={`h-full ${alert.threat.severity === 'critical' ? 'bg-destructive' : 'bg-cyber-yellow'} rounded-full`}
+                        className={`h-full rounded-full ${
+                          alert.threat.severity === 'critical' || alert.threat.severity === 'high'
+                            ? 'bg-destructive'
+                            : alert.threat.severity === 'medium'
+                            ? 'bg-cyber-yellow'
+                            : 'bg-cyber-green'
+                        }`}
                       />
                     </div>
                   </div>
