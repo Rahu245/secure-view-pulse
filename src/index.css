@@ -103,9 +103,9 @@
 @layer components {
   .cyber-card {
     @apply bg-card rounded-xl border border-border;
-    box-shadow: 0 4px 24px hsl(222 47% 4% / 0.5), inset 0 1px 0 hsl(var(--cyber-cyan) / 0.05);
-    backdrop-filter: blur(12px);
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 4px 30px hsl(220 50% 3% / 0.6), inset 0 1px 0 hsl(var(--cyber-cyan) / 0.06);
+    backdrop-filter: blur(16px);
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
   }
 
   .cyber-card:hover {
