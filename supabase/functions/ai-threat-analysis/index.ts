@@ -42,24 +42,33 @@ Format with clear headers using markdown. Be specific and actionable.`;
       port: t.port,
     }));
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          {
-            role: "user",
-            content: `Analyze this threat intelligence data (${threats.length} total threats, showing sample of ${threatSummary.length}):\n\n${JSON.stringify(threatSummary, null, 2)}`,
-          },
-        ],
-        stream: true,
-      }),
+    const payload = JSON.stringify({
+      model: "google/gemini-2.5-flash",
+      messages: [
+        { role: "system", content: systemPrompt },
+        {
+          role: "user",
+          content: `Analyze this threat intelligence data (${threats.length} total threats, showing sample of ${threatSummary.length}):\n\n${JSON.stringify(threatSummary, null, 2)}`,
+        },
+      ],
+      stream: true,
     });
+
+    let response: Response | null = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: payload,
+      });
+      if (response.ok || (response.status !== 502 && response.status !== 503)) break;
+      console.warn(`AI gateway returned ${response.status}, retrying...`);
+      await response.text(); // consume body
+      await new Promise(r => setTimeout(r, 2000));
+    }
 
     if (!response.ok) {
       if (response.status === 429) {
