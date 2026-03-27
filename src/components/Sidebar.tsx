@@ -58,17 +58,18 @@ const Sidebar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <aside className="w-[200px] border-r flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber shrink-0" style={{ background: 'rgba(245, 243, 255, 0.8)', backdropFilter: 'blur(16px)', borderRight: '1px solid #ddd6fe' }}>
+    <aside className="w-[200px] flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber shrink-0" style={{ background: 'rgba(26, 15, 60, 0.9)', backdropFilter: 'blur(16px)', borderRight: '1px solid #4c1d9530' }}>
       {/* Search */}
       <div className="px-3 mb-2">
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: '#a78bfa' }} />
           <input
             type="text"
             placeholder="Search tools…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-muted/50 border border-border rounded-md text-xs py-1.5 pl-7 pr-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full rounded-md text-xs py-1.5 pl-7 pr-2 focus:outline-none focus:ring-1"
+            style={{ background: '#2d1b6930', border: '1px solid #4c1d9540', color: '#f5f3ff', focusRingColor: '#7c3aed' }}
           />
         </div>
       </div>
@@ -77,24 +78,25 @@ const Sidebar = () => {
       <div className="px-2 mb-1">
         <button
           onClick={() => navigate("/ip-agent")}
-          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all ${
-            isActive("/ip-agent")
-              ? "text-primary border border-primary/30"
-              : "text-foreground hover:border hover:border-transparent border border-transparent"
-          }`}
-          style={isActive("/ip-agent") ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : {}}
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all"
+          style={isActive("/ip-agent")
+            ? { background: '#7c3aed25', borderLeft: '3px solid #a78bfa', color: '#c4b5fd' }
+            : { color: '#a78bfa' }
+          }
+          onMouseEnter={(e) => { if (!isActive("/ip-agent")) e.currentTarget.style.background = '#2d1b6930'; }}
+          onMouseLeave={(e) => { if (!isActive("/ip-agent")) e.currentTarget.style.background = ''; }}
         >
           <Bot className="w-4 h-4 shrink-0" />
           <span>IP Agent</span>
-          <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">AI</span>
+          <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded font-bold" style={{ background: '#4c1d9540', color: '#c4b5fd' }}>AI</span>
         </button>
       </div>
 
-      <div className="h-px bg-border mx-3 my-1" />
+      <div className="h-px mx-3 my-1" style={{ background: '#4c1d9540' }} />
 
       {/* Section label */}
       <div className="px-3 py-1">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Core Tools</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: '#6d28d9' }}>Core Tools</span>
       </div>
 
       {/* Core tools */}
@@ -102,13 +104,12 @@ const Sidebar = () => {
         <button
           key={item.id}
           onClick={() => navigate(item.path)}
-          className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
-            isActive(item.path)
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-          style={isActive(item.path) ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : { }}
-          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#ede9fe'; }}
+          className="mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all"
+          style={isActive(item.path)
+            ? { background: '#7c3aed25', borderLeft: '3px solid #a78bfa', color: '#c4b5fd' }
+            : { color: '#a78bfa' }
+          }
+          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#2d1b6930'; }}
           onMouseLeave={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = ''; }}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
@@ -116,11 +117,11 @@ const Sidebar = () => {
         </button>
       ))}
 
-      <div className="h-px bg-border mx-3 my-1" />
+      <div className="h-px mx-3 my-1" style={{ background: '#4c1d9540' }} />
 
       {/* Section label */}
       <div className="px-3 py-1">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Pages</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: '#6d28d9' }}>Pages</span>
       </div>
 
       {/* Page navigation */}
@@ -128,13 +129,12 @@ const Sidebar = () => {
         <button
           key={item.path}
           onClick={() => navigate(item.path)}
-          className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
-            isActive(item.path)
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-          style={isActive(item.path) ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : { }}
-          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#ede9fe'; }}
+          className="mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all"
+          style={isActive(item.path)
+            ? { background: '#7c3aed25', borderLeft: '3px solid #a78bfa', color: '#c4b5fd' }
+            : { color: '#a78bfa' }
+          }
+          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#2d1b6930'; }}
           onMouseLeave={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = ''; }}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
@@ -142,11 +142,11 @@ const Sidebar = () => {
         </button>
       ))}
 
-      <div className="h-px bg-border mx-3 my-1" />
+      <div className="h-px mx-3 my-1" style={{ background: '#4c1d9540' }} />
 
       {/* Section label */}
       <div className="px-3 py-1">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Security Tools</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: '#6d28d9' }}>Security Tools</span>
       </div>
 
       {/* Security tool categories */}
@@ -158,7 +158,10 @@ const Sidebar = () => {
           <div key={cat.id}>
             <button
               onClick={() => toggleCategory(cat.id)}
-              className="mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs w-[calc(100%-16px)] transition-all text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              className="mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs w-[calc(100%-16px)] transition-all"
+              style={{ color: '#a78bfa' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#2d1b6930'; e.currentTarget.style.color = '#c4b5fd'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = ''; e.currentTarget.style.color = '#a78bfa'; }}
             >
               <CatIcon className="w-3.5 h-3.5 shrink-0 text-primary/70" />
               <span className="flex-1 text-left">{cat.label}</span>
@@ -173,11 +176,13 @@ const Sidebar = () => {
                   <button
                     key={tool.id}
                     onClick={() => navigate(`/tool/${tool.id}`)}
-                    className={`flex items-center gap-2 px-2.5 py-1.5 text-[11px] rounded-md transition-colors ${
-                      isActive(`/tool/${tool.id}`)
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                    }`}
+                    className="flex items-center gap-2 px-2.5 py-1.5 text-[11px] rounded-md transition-colors"
+                    style={isActive(`/tool/${tool.id}`)
+                      ? { background: '#7c3aed25', color: '#c4b5fd' }
+                      : { color: '#a78bfa' }
+                    }
+                    onMouseEnter={(e) => { if (!isActive(`/tool/${tool.id}`)) { e.currentTarget.style.background = '#2d1b6930'; e.currentTarget.style.color = '#c4b5fd'; } }}
+                    onMouseLeave={(e) => { if (!isActive(`/tool/${tool.id}`)) { e.currentTarget.style.background = ''; e.currentTarget.style.color = '#a78bfa'; } }}
                   >
                     <span
                       className={`w-1.5 h-1.5 rounded-full shrink-0 ${

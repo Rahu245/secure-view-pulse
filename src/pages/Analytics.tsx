@@ -56,23 +56,25 @@ const Analytics = () => {
   }, [threats]);
 
   const customTooltipStyle = {
-    backgroundColor: 'hsl(222,40%,10%)',
-    border: '1px solid hsl(222,30%,20%)',
+    backgroundColor: 'rgba(26, 15, 60, 0.95)',
+    border: '1px solid #4c1d9540',
     borderRadius: '8px',
     fontSize: '11px',
-    color: 'hsl(200,20%,90%)',
+    color: '#c4b5fd',
+    backdropFilter: 'blur(12px)',
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-foreground">Threat <span className="text-primary">Analytics</span></h1>
+        <h1 className="text-xl font-bold" style={{ color: '#e9d5ff' }}>Threat <span className="text-primary">Analytics</span></h1>
         <div className="flex items-center gap-2">
           <select
             value={timeRange}
             onChange={e => setTimeRange(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:border-primary/40"
+            className="px-3 py-1.5 text-xs rounded-lg focus:outline-none"
+            style={{ background: 'rgba(26, 15, 60, 0.6)', border: '1px solid #4c1d9540', color: '#c4b5fd' }}
           >
             <option value="1h">Last Hour</option>
             <option value="24h">Last 24h</option>
@@ -82,7 +84,8 @@ const Analytics = () => {
           <select
             value={countryFilter}
             onChange={e => setCountryFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:border-primary/40"
+            className="px-3 py-1.5 text-xs rounded-lg focus:outline-none"
+            style={{ background: 'rgba(26, 15, 60, 0.6)', border: '1px solid #4c1d9540', color: '#c4b5fd' }}
           >
             <option value="all">All Countries</option>
             {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -96,12 +99,12 @@ const Analytics = () => {
       {/* Charts Grid */}
       <div className="grid grid-cols-2 gap-4">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="cyber-card p-4">
-          <h3 className="text-sm font-semibold mb-3 text-foreground">Attack Type Frequency</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: '#e9d5ff' }}>Attack Type Frequency</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={attackTypeData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(222,30%,18%)" />
-              <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
-              <YAxis tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#4c1d9530" />
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#a78bfa' }} />
+              <YAxis tick={{ fontSize: 10, fill: '#a78bfa' }} />
               <Tooltip contentStyle={customTooltipStyle} />
               <Bar dataKey="count" fill="hsl(185,100%,50%)" radius={[4, 4, 0, 0]} />
             </BarChart>
@@ -109,7 +112,7 @@ const Analytics = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="cyber-card p-4">
-          <h3 className="text-sm font-semibold mb-3 text-foreground">Country Distribution</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: '#e9d5ff' }}>Country Distribution</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie data={countryData} cx="50%" cy="50%" outerRadius={85} innerRadius={40} paddingAngle={2} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
@@ -123,12 +126,12 @@ const Analytics = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="cyber-card p-4">
-          <h3 className="text-sm font-semibold mb-3 text-foreground">Attack Trends Over Time</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: '#e9d5ff' }}>Attack Trends Over Time</h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(222,30%,18%)" />
-              <XAxis dataKey="hour" tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
-              <YAxis tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#4c1d9530" />
+              <XAxis dataKey="hour" tick={{ fontSize: 10, fill: '#a78bfa' }} />
+              <YAxis tick={{ fontSize: 10, fill: '#a78bfa' }} />
               <Tooltip contentStyle={customTooltipStyle} />
               <Line type="monotone" dataKey="attacks" stroke="hsl(185,100%,50%)" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="critical" stroke="hsl(0,72%,55%)" strokeWidth={2} dot={false} />
@@ -138,12 +141,12 @@ const Analytics = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="cyber-card p-4">
-          <h3 className="text-sm font-semibold mb-3 text-foreground">Device-wise Attacks</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: '#e9d5ff' }}>Device-wise Attacks</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={deviceData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(222,30%,18%)" />
-              <XAxis type="number" tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
-              <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} width={90} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#4c1d9530" />
+              <XAxis type="number" tick={{ fontSize: 10, fill: '#a78bfa' }} />
+              <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: '#a78bfa' }} width={90} />
               <Tooltip contentStyle={customTooltipStyle} />
               <Bar dataKey="value" fill="hsl(217,91%,60%)" radius={[0, 4, 4, 0]} />
             </BarChart>
@@ -152,12 +155,12 @@ const Analytics = () => {
       </div>
 
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="cyber-card p-4">
-        <h3 className="text-sm font-semibold mb-3 text-foreground">Severity Breakdown</h3>
+        <h3 className="text-sm font-semibold mb-3" style={{ color: '#e9d5ff' }}>Severity Breakdown</h3>
         <ResponsiveContainer width="100%" height={180}>
           <AreaChart data={trendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(222,30%,18%)" />
-            <XAxis dataKey="hour" tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
-            <YAxis tick={{ fontSize: 10, fill: 'hsl(215,20%,55%)' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#4c1d9530" />
+            <XAxis dataKey="hour" tick={{ fontSize: 10, fill: '#a78bfa' }} />
+            <YAxis tick={{ fontSize: 10, fill: '#a78bfa' }} />
             <Tooltip contentStyle={customTooltipStyle} />
             <Area type="monotone" dataKey="attacks" stroke="hsl(185,100%,50%)" fill="hsl(185,100%,50%)" fillOpacity={0.1} strokeWidth={2} />
             <Area type="monotone" dataKey="critical" stroke="hsl(0,72%,55%)" fill="hsl(0,72%,55%)" fillOpacity={0.15} strokeWidth={2} />

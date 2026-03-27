@@ -58,12 +58,12 @@ const WorldMap = ({ threats }: WorldMapProps) => {
   return (
     <div className="cyber-card p-4 relative overflow-hidden">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-foreground">Global Threat Map</h2>
+        <h2 className="text-sm font-semibold" style={{ color: '#e9d5ff' }}>Global Threat Map</h2>
         <div className="flex items-center gap-3 text-[10px]">
           {Object.entries(severityColors).map(([level, color]) => (
             <div key={level} className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-              <span className="capitalize text-muted-foreground">{level}</span>
+              <span className="capitalize" style={{ color: '#a78bfa' }}>{level}</span>
             </div>
           ))}
         </div>
@@ -77,7 +77,7 @@ const WorldMap = ({ threats }: WorldMapProps) => {
         {/* Grid */}
         <defs>
           <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(222,30%,18%)" strokeWidth="0.3" />
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#4c1d9530" strokeWidth="0.3" />
           </pattern>
           <filter id="glow">
             <feGaussianBlur stdDeviation="2" result="blur" />
@@ -87,11 +87,12 @@ const WorldMap = ({ threats }: WorldMapProps) => {
             </feMerge>
           </filter>
         </defs>
+        <rect width={W} height={H} fill="#0f0a1e" />
         <rect width={W} height={H} fill="url(#grid)" />
 
         {/* Continents */}
         {WORLD_PATHS.map((d, i) => (
-          <path key={i} d={d} fill="hsl(222,30%,16%)" stroke="hsl(185,100%,50%)" strokeWidth="0.5" strokeOpacity="0.2" fillOpacity="0.6" />
+          <path key={i} d={d} fill="#2d1b69" stroke="#4c1d9540" strokeWidth="0.5" fillOpacity="0.7" />
         ))}
 
         {/* Attack Lines */}
@@ -109,7 +110,7 @@ const WorldMap = ({ threats }: WorldMapProps) => {
             {/* Origin dot */}
             <circle cx={a.x1} cy={a.y1} r="3" fill={severityColors[a.severity]} fillOpacity="0.8" filter="url(#glow)" />
             {/* Target dot */}
-            <circle cx={a.x2} cy={a.y2} r="2.5" fill="hsl(185,100%,50%)" fillOpacity="0.7" />
+            <circle cx={a.x2} cy={a.y2} r="2.5" fill="#c4b5fd" fillOpacity="0.7" />
             {/* Invisible hover area */}
             <circle
               cx={a.x1}
@@ -143,16 +144,23 @@ const WorldMap = ({ threats }: WorldMapProps) => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="absolute z-10 bg-popover border border-primary/30 rounded-lg p-3 text-xs pointer-events-none max-w-[200px]"
-            style={{ left: tooltipPos.x + 10, top: tooltipPos.y - 10 }}
+            className="absolute z-10 rounded-lg p-3 text-xs pointer-events-none max-w-[200px]"
+            style={{
+              left: tooltipPos.x + 10,
+              top: tooltipPos.y - 10,
+              background: 'rgba(26, 15, 60, 0.95)',
+              border: '1px solid #7c3aed50',
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 8px 32px rgba(76, 29, 149, 0.4)',
+            }}
           >
             <div className="space-y-1 font-mono">
-              <div><span className="text-muted-foreground">Attacker:</span> <span className="text-destructive">{hoveredThreat.attackerIp}</span></div>
-              <div><span className="text-muted-foreground">Target:</span> <span className="text-primary">{hoveredThreat.targetIp}</span></div>
-              <div><span className="text-muted-foreground">Country:</span> {hoveredThreat.country} → {hoveredThreat.targetCountry}</div>
-              <div><span className="text-muted-foreground">Type:</span> {hoveredThreat.attackType}</div>
-              <div><span className="text-muted-foreground">Port:</span> {hoveredThreat.port}</div>
-              <div><span className="text-muted-foreground">Severity:</span> <span className={`severity-${hoveredThreat.severity} font-bold uppercase`}>{hoveredThreat.severity}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Attacker:</span> <span className="text-destructive">{hoveredThreat.attackerIp}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Target:</span> <span style={{ color: '#c4b5fd' }}>{hoveredThreat.targetIp}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Country:</span> <span style={{ color: '#e9d5ff' }}>{hoveredThreat.country} → {hoveredThreat.targetCountry}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Type:</span> <span style={{ color: '#e9d5ff' }}>{hoveredThreat.attackType}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Port:</span> <span style={{ color: '#e9d5ff' }}>{hoveredThreat.port}</span></div>
+              <div><span style={{ color: '#a78bfa' }}>Severity:</span> <span className={`severity-${hoveredThreat.severity} font-bold uppercase`}>{hoveredThreat.severity}</span></div>
             </div>
           </motion.div>
         )}

@@ -95,16 +95,16 @@ const GeoMap = ({ threats }: GeoMapProps) => {
     attackOrigins.forEach((origin) => {
       const marker = L.circleMarker(origin.coords, {
         radius: Math.min(origin.count * 3 + 5, 20),
-        color: severityColors[origin.maxSeverity],
+        color: '#c4b5fd',
         fillColor: severityColors[origin.maxSeverity],
-        fillOpacity: 0.25,
+        fillOpacity: 0.35,
         weight: 2,
         opacity: 0.8,
       }).addTo(layerRef.current!);
 
       marker.bindTooltip(
-        `<div style="font-family: JetBrains Mono, monospace; font-size: 11px; color: #e0e8f0;">
-          <div style="font-weight: bold;">${origin.country}</div>
+        `<div style="font-family: JetBrains Mono, monospace; font-size: 11px; color: #c4b5fd;">
+          <div style="font-weight: bold; color: #e9d5ff;">${origin.country}</div>
           <div>Attacks: ${origin.count}</div>
           <div>Max Severity: <span style="color: ${severityColors[origin.maxSeverity]}; text-transform: uppercase; font-weight: bold;">${origin.maxSeverity}</span></div>
         </div>`,
@@ -116,15 +116,15 @@ const GeoMap = ({ threats }: GeoMapProps) => {
     displayThreats.forEach((t) => {
       const marker = L.circleMarker(t.targetCoords, {
         radius: 3,
-        color: '#00f0ff',
-        fillColor: '#00f0ff',
+        color: '#a78bfa',
+        fillColor: '#c4b5fd',
         fillOpacity: 0.6,
         weight: 1,
       }).addTo(layerRef.current!);
 
       marker.bindTooltip(
-        `<div style="font-family: JetBrains Mono, monospace; font-size: 11px; color: #e0e8f0;">
-          <div>Target: ${t.targetIp}</div>
+        `<div style="font-family: JetBrains Mono, monospace; font-size: 11px; color: #c4b5fd;">
+          <div style="color: #e9d5ff;">Target: ${t.targetIp}</div>
           <div>${t.targetCountry} · Port ${t.port}</div>
           <div>Type: ${t.attackType}</div>
         </div>`,
@@ -148,7 +148,7 @@ const GeoMap = ({ threats }: GeoMapProps) => {
   return (
     <div className="cyber-card overflow-hidden relative">
       <div className="flex items-center justify-between p-4 pb-0">
-        <h2 className="text-sm font-semibold text-foreground">Geospatial Risk Map</h2>
+        <h2 className="text-sm font-semibold" style={{ color: '#e9d5ff' }}>Geospatial Risk Map</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             <button onClick={handleZoomIn} className="cyber-btn text-[10px] px-2 py-1">+</button>
@@ -158,21 +158,21 @@ const GeoMap = ({ threats }: GeoMapProps) => {
           <div className="flex items-center gap-3 text-[10px]">
             {Object.entries(severityColors).map(([level, color]) => (
               <div key={level} className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                <span className="capitalize text-muted-foreground">{level}</span>
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}60` }} />
+                <span className="capitalize" style={{ color: '#a78bfa' }}>{level}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
-      <div className="absolute top-12 right-4 z-10 flex flex-col gap-1 text-[10px] font-mono text-muted-foreground bg-card/80 backdrop-blur-sm rounded-lg border border-border p-2">
-        <div>Live Threats: <span className="text-primary font-bold">{displayThreats.length}</span></div>
-        <div>Origins: <span className="text-primary font-bold">{attackOrigins.length}</span></div>
+      <div className="absolute top-12 right-4 z-10 flex flex-col gap-1 text-[10px] font-mono rounded-lg p-2" style={{ background: 'rgba(26, 15, 60, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid #4c1d9540', color: '#a78bfa' }}>
+        <div>Live Threats: <span className="font-bold" style={{ color: '#c4b5fd' }}>{displayThreats.length}</span></div>
+        <div>Origins: <span className="font-bold" style={{ color: '#c4b5fd' }}>{attackOrigins.length}</span></div>
       </div>
       <div
         ref={containerRef}
         className="h-[400px]"
-        style={{ zIndex: 1, background: 'hsl(222, 47%, 8%)', borderRadius: '0 0 0.75rem 0.75rem' }}
+        style={{ zIndex: 1, background: '#0f0a1e', borderRadius: '0 0 0.75rem 0.75rem' }}
       />
     </div>
   );
