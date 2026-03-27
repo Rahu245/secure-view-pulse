@@ -6,23 +6,23 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 215 25% 17%;
+    --background: 215 26% 27%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 17%;
+    --card: 215 32% 17%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 17%;
+    --popover: 215 32% 17%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 187 100% 42%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 187 100% 50%;
+    --primary-foreground: 215 50% 10%;
 
     --secondary: 263 84% 52%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 215 20% 22%;
+    --muted-foreground: 214 20% 69%;
 
     --accent: 263 70% 45%;
     --accent-foreground: 0 0% 100%;
@@ -30,35 +30,35 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 40% 90%;
-    --input: 210 40% 93%;
-    --ring: 187 100% 42%;
+    --border: 215 17% 37%;
+    --input: 215 17% 37%;
+    --ring: 187 100% 50%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 215 16% 47%;
-    --sidebar-primary: 187 100% 42%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 215 25% 17%;
-    --sidebar-border: 210 40% 90%;
-    --sidebar-ring: 187 100% 42%;
+    --sidebar-background: 215 39% 17%;
+    --sidebar-foreground: 214 20% 69%;
+    --sidebar-primary: 187 100% 50%;
+    --sidebar-primary-foreground: 215 50% 10%;
+    --sidebar-accent: 215 25% 22%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 17% 37%;
+    --sidebar-ring: 187 100% 50%;
 
-    /* Cyber specific tokens — reduced opacity for light theme */
-    --cyber-cyan: 187 100% 42%;
+    /* Cyber specific tokens — full saturation */
+    --cyber-cyan: 187 100% 50%;
     --cyber-blue: 263 84% 52%;
     --cyber-red: 0 72% 51%;
-    --cyber-green: 142 70% 40%;
+    --cyber-green: 142 70% 45%;
     --cyber-yellow: 45 93% 47%;
     --cyber-purple: 263 84% 52%;
-    --cyber-glow: 0 0% 0% / 0;
-    --cyber-grid: 210 40% 89%;
+    --cyber-glow: 187 100% 50% / 0.15;
+    --cyber-grid: 215 17% 37%;
 
-    --gradient-bg: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
-    --glow-cyan: 0 0 12px hsl(187 100% 42% / 0.2), 0 0 30px hsl(187 100% 42% / 0.06);
-    --glow-purple: 0 0 12px hsl(263 84% 52% / 0.2), 0 0 30px hsl(263 84% 52% / 0.06);
-    --glow-red: 0 0 12px hsl(0 72% 51% / 0.25), 0 0 30px hsl(0 72% 51% / 0.08);
+    --gradient-bg: linear-gradient(160deg, #334155 0%, #2d3a4d 50%, #334155 100%);
+    --glow-cyan: 0 0 12px hsl(187 100% 50% / 0.35), 0 0 30px hsl(187 100% 50% / 0.12);
+    --glow-purple: 0 0 12px hsl(263 84% 52% / 0.35), 0 0 30px hsl(263 84% 52% / 0.12);
+    --glow-red: 0 0 12px hsl(0 72% 51% / 0.35), 0 0 30px hsl(0 72% 51% / 0.12);
   }
 }
 
@@ -80,11 +80,11 @@
     position: fixed;
     inset: 0;
     background-image:
-      radial-gradient(circle 1.5px at center, #e2e8f0 1px, transparent 1px);
-    background-size: 24px 24px;
+      radial-gradient(circle 1px at 1px 1px, #475569 1px, transparent 0);
+    background-size: 28px 28px;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.7;
+    opacity: 0.5;
   }
 
   #root {
@@ -101,13 +101,14 @@
 @layer components {
   .cyber-card {
     @apply bg-card rounded-xl border border-border;
-    box-shadow: 0 1px 3px hsl(215 25% 17% / 0.06), 0 1px 2px hsl(215 25% 17% / 0.04);
+    box-shadow: 0 2px 8px hsl(215 39% 10% / 0.3);
     transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
   }
 
   .cyber-card:hover {
+    background: #273549;
     border-color: hsl(var(--cyber-cyan) / 0.3);
-    box-shadow: 0 4px 12px hsl(215 25% 17% / 0.08), 0 0 20px hsl(var(--cyber-cyan) / 0.06);
+    box-shadow: 0 4px 16px hsl(215 39% 10% / 0.4), 0 0 20px hsl(var(--cyber-cyan) / 0.08);
     transform: translateY(-1px);
   }
 
@@ -216,31 +217,31 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Leaflet overrides for light theme */
+/* Leaflet overrides */
 .leaflet-container {
-  background: hsl(210, 40%, 96%) !important;
+  background: #1e293b !important;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
 .leaflet-tooltip.cyber-tooltip {
-  background: hsl(0, 0%, 100%) !important;
-  border: 1px solid hsl(210, 40%, 90%) !important;
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
   border-radius: 8px !important;
-  color: hsl(215, 25%, 17%) !important;
-  box-shadow: 0 4px 12px hsl(215, 25%, 17%, 0.08) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px hsl(215, 39%, 10%, 0.4) !important;
   padding: 8px 10px !important;
 }
 
 .leaflet-tooltip.cyber-tooltip::before {
-  border-top-color: hsl(0, 0%, 100%) !important;
+  border-top-color: #1e293b !important;
 }
 
 .leaflet-control-zoom a {
-  background: hsl(0, 0%, 100%) !important;
-  color: hsl(215, 25%, 17%) !important;
-  border-color: hsl(210, 40%, 90%) !important;
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
 }
 
 .leaflet-control-zoom a:hover {
-  background: hsl(210, 40%, 96%) !important;
+  background: #273549 !important;
 }
