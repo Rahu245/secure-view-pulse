@@ -79,9 +79,10 @@ const Sidebar = () => {
           onClick={() => navigate("/ip-agent")}
           className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all ${
             isActive("/ip-agent")
-              ? "bg-primary/15 text-primary border border-primary/30"
-              : "text-foreground hover:bg-muted/60 border border-transparent"
+              ? "text-primary border border-primary/30"
+              : "text-foreground hover:border hover:border-transparent border border-transparent"
           }`}
+          style={isActive("/ip-agent") ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : {}}
         >
           <Bot className="w-4 h-4 shrink-0" />
           <span>IP Agent</span>
@@ -103,9 +104,12 @@ const Sidebar = () => {
           onClick={() => navigate(item.path)}
           className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
             isActive(item.path)
-              ? "bg-primary/10 text-primary"
-              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              ? "text-primary"
+              : "text-muted-foreground hover:text-foreground"
           }`}
+          style={isActive(item.path) ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : { }}
+          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#ede9fe'; }}
+          onMouseLeave={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = ''; }}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
           <span>{item.label}</span>
@@ -126,9 +130,12 @@ const Sidebar = () => {
           onClick={() => navigate(item.path)}
           className={`mx-2 flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-all ${
             isActive(item.path)
-              ? "bg-primary/10 text-primary"
-              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              ? "text-primary"
+              : "text-muted-foreground hover:text-foreground"
           }`}
+          style={isActive(item.path) ? { background: '#7c3aed20', borderLeft: '3px solid #7c3aed' } : { }}
+          onMouseEnter={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = '#ede9fe'; }}
+          onMouseLeave={(e) => { if (!isActive(item.path)) e.currentTarget.style.background = ''; }}
         >
           <item.icon className="w-3.5 h-3.5 shrink-0" />
           <span>{item.label}</span>
