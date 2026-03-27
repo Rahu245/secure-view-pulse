@@ -15,7 +15,7 @@ const TopNav = () => {
   const location = useLocation();
 
   return (
-    <header className="h-14 border-b border-border bg-card/80 backdrop-blur-md flex items-center px-4 gap-4 sticky top-0 z-50">
+    <header className="h-14 border-b border-border flex items-center px-4 gap-4 sticky top-0 z-50" style={{ background: 'rgba(237, 233, 254, 0.7)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #c4b5fd50' }}>
       <div className="flex items-center gap-2 mr-6 cursor-pointer" onClick={() => navigate("/")}>
         <Shield className="w-6 h-6 text-primary cyber-glow-text" />
         <h1 className="text-base font-bold tracking-tight text-foreground">

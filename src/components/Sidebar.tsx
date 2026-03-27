@@ -58,7 +58,7 @@ const Sidebar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <aside className="w-[200px] border-r border-border bg-card/60 backdrop-blur-md flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber shrink-0">
+    <aside className="w-[200px] border-r flex flex-col py-2 overflow-y-auto overflow-x-hidden scrollbar-cyber shrink-0" style={{ background: 'rgba(245, 243, 255, 0.8)', backdropFilter: 'blur(16px)', borderRight: '1px solid #ddd6fe' }}>
       {/* Search */}
       <div className="px-3 mb-2">
         <div className="relative">
