@@ -1,18 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Brain, RefreshCw } from "lucide-react";
-import { mockThreats, generateThreat } from "@/data/mockThreats";
 import { streamAI } from "@/lib/streamAI";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { useData } from "@/contexts/DataContext";
 
 const AiThreatSummary = () => {
-  const [threats] = useState(() => {
-    const t = [...mockThreats];
-    for (let i = 0; i < 20; i++) t.unshift(generateThreat());
-    return t;
-  });
+  const { threats } = useData();
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
+  const lastAnalyzedCount = useRef(0);
 
   const analyze = async () => {
     setLoading(true);
@@ -39,7 +36,21 @@ const AiThreatSummary = () => {
     }
   };
 
-  useEffect(() => { analyze(); }, []);
+  // Auto-analyze on mount and re-analyze every 30s if threats changed
+  useEffect(() => {
+    if (threats.length === 0) return;
+    if (lastAnalyzedCount.current === 0) {
+      lastAnalyzedCount.current = threats.length;
+      analyze();
+    }
+    const interval = setInterval(() => {
+      if (threats.length !== lastAnalyzedCount.current && !loading) {
+        lastAnalyzedCount.current = threats.length;
+        analyze();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [threats.length, loading]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

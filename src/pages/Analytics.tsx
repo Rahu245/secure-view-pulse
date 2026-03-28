@@ -6,8 +6,8 @@ import {
   PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
 } from "recharts";
 import { Download } from "lucide-react";
-import { mockThreats, ATTACK_TYPES, COUNTRIES } from "@/data/mockThreats";
-
+import { ATTACK_TYPES, COUNTRIES } from "@/data/mockThreats";
+import { useData } from "@/contexts/DataContext";
 const CHART_COLORS = ['hsl(185,100%,50%)', 'hsl(217,91%,60%)', 'hsl(0,72%,55%)', 'hsl(45,93%,58%)', 'hsl(142,70%,45%)', 'hsl(280,60%,55%)', 'hsl(30,80%,55%)', 'hsl(200,60%,50%)'];
 
 const Analytics = () => {
@@ -15,7 +15,7 @@ const Analytics = () => {
   const [timeRange, setTimeRange] = useState('24h');
   const [countryFilter, setCountryFilter] = useState('all');
 
-  const threats = mockThreats;
+  const { threats } = useData();
 
   const attackTypeData = useMemo(() => {
     return ATTACK_TYPES.map(type => ({
