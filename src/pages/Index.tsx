@@ -29,7 +29,7 @@ const Index = () => {
     const interval = setInterval(() => {
       setThreats(prev => {
         const newThreat = generateThreat();
-        return [newThreat, ...prev.slice(0, 99)];
+        return [newThreat, ...prev.slice(0, 499)];
       });
     }, 4000);
     return () => clearInterval(interval);
