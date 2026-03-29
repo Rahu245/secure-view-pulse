@@ -6,13 +6,12 @@ import StatsBar from "@/components/StatsBar";
 import AlertSystem from "@/components/AlertSystem";
 import { mockThreats, generateThreat, COUNTRIES } from "@/data/mockThreats";
 import { useData } from "@/contexts/DataContext";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { ChevronDown, Globe, Upload, Radio, Shield } from "lucide-react";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const { dataLoaded, setDataLoaded, threats, setThreats, alertsEnabled, autoBlockCritical, blockedIps, addBlockedIp } = useData();
+  const { dataLoaded, setDataLoaded, threats, setThreats, alertsEnabled } = useData();
   const [selectedCountry, setSelectedCountry] = useState("all");
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -28,15 +27,13 @@ const Index = () => {
     }
 
     const interval = setInterval(() => {
-      const newThreat = generateThreat();
-      if (autoBlockCritical && newThreat.severity === 'critical') {
-        addBlockedIp(newThreat.attackerIp);
-        toast.error(`🚫 Auto-blocked CRITICAL threat: ${newThreat.attackerIp}`);
-      }
-      setThreats(prev => [newThreat, ...prev.slice(0, 499)]);
+      setThreats(prev => {
+        const newThreat = generateThreat();
+        return [newThreat, ...prev.slice(0, 499)];
+      });
     }, 4000);
     return () => clearInterval(interval);
-  }, [dataLoaded, autoBlockCritical]);
+  }, [dataLoaded]);
 
   const filteredThreats = useMemo(() => {
     if (selectedCountry === "all") return threats;

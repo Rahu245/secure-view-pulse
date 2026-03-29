@@ -4,11 +4,9 @@ import { Switch } from "@/components/ui/switch";
 interface SettingsPanelProps {
   alertsEnabled: boolean;
   onAlertsEnabledChange: (enabled: boolean) => void;
-  autoBlockCritical: boolean;
-  onAutoBlockCriticalChange: (enabled: boolean) => void;
 }
 
-const SettingsPanel = ({ alertsEnabled, onAlertsEnabledChange, autoBlockCritical, onAutoBlockCriticalChange }: SettingsPanelProps) => {
+const SettingsPanel = ({ alertsEnabled, onAlertsEnabledChange }: SettingsPanelProps) => {
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -30,7 +28,7 @@ const SettingsPanel = ({ alertsEnabled, onAlertsEnabledChange, autoBlockCritical
             <Shield className="w-4 h-4 text-cyber-yellow" />
             <span>Auto-block Critical</span>
           </div>
-          <Switch checked={autoBlockCritical} onCheckedChange={onAutoBlockCriticalChange} />
+          <Switch />
         </div>
 
         <div className="cyber-card p-3 flex items-center justify-between">

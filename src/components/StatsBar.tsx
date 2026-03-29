@@ -1,23 +1,21 @@
 import { motion } from "framer-motion";
-import { AlertTriangle, Shield, Activity, Globe, Ban } from "lucide-react";
+import { AlertTriangle, Shield, Activity, Globe } from "lucide-react";
 import type { ThreatData } from "@/data/mockThreats";
-import { useData } from "@/contexts/DataContext";
 
 interface StatsBarProps {
   threats: ThreatData[];
 }
 
 const StatsBar = ({ threats }: StatsBarProps) => {
-  const { blockedIps } = useData();
-  const activeThreats = threats.filter(t => !blockedIps.includes(t.attackerIp));
-  const criticalCount = activeThreats.filter(t => t.severity === 'critical').length;
-  const highCount = activeThreats.filter(t => t.severity === 'high').length;
-  const uniqueCountries = new Set(activeThreats.map(t => t.country)).size;
+  const criticalCount = threats.filter(t => t.severity === 'critical').length;
+  const highCount = threats.filter(t => t.severity === 'high').length;
+  const uniqueCountries = new Set(threats.map(t => t.country)).size;
+  const uniqueTypes = new Set(threats.map(t => t.attackType)).size;
 
   const stats = [
-    { label: 'Active Threats', value: activeThreats.length, icon: Activity, color: 'text-primary' },
+    { label: 'Total Threats', value: threats.length, icon: Activity, color: 'text-primary' },
     { label: 'Critical', value: criticalCount, icon: AlertTriangle, color: 'text-destructive' },
-    { label: 'Blocked IPs', value: blockedIps.length, icon: Ban, color: 'text-cyber-yellow' },
+    { label: 'High Risk', value: highCount, icon: Shield, color: 'text-cyber-yellow' },
     { label: 'Countries', value: uniqueCountries, icon: Globe, color: 'text-secondary' },
   ];
 

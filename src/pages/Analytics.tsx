@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
 } from "recharts";
-import { Download, Ban } from "lucide-react";
+import { Download } from "lucide-react";
 import { ATTACK_TYPES, COUNTRIES } from "@/data/mockThreats";
 import { useData } from "@/contexts/DataContext";
 const CHART_COLORS = ['hsl(185,100%,50%)', 'hsl(217,91%,60%)', 'hsl(0,72%,55%)', 'hsl(45,93%,58%)', 'hsl(142,70%,45%)', 'hsl(280,60%,55%)', 'hsl(30,80%,55%)', 'hsl(200,60%,50%)'];
@@ -15,7 +15,7 @@ const Analytics = () => {
   const [timeRange, setTimeRange] = useState('24h');
   const [countryFilter, setCountryFilter] = useState('all');
 
-  const { threats, blockedIps } = useData();
+  const { threats } = useData();
 
   const attackTypeData = useMemo(() => {
     return ATTACK_TYPES.map(type => ({
@@ -32,17 +32,13 @@ const Analytics = () => {
   }, [threats]);
 
   const trendData = useMemo(() => {
-    return Array.from({ length: 24 }, (_, i) => {
-      const hourThreats = Math.floor(Math.random() * 20 + 5);
-      const blocked = Math.min(Math.floor(blockedIps.length / 24 * (Math.random() + 0.5)), hourThreats);
-      return {
-        hour: `${i}:00`,
-        attacks: hourThreats,
-        critical: Math.floor(Math.random() * 5),
-        blocked,
-      };
-    });
-  }, [blockedIps.length]);
+    return Array.from({ length: 24 }, (_, i) => ({
+      hour: `${i}:00`,
+      attacks: Math.floor(Math.random() * 20 + 5),
+      critical: Math.floor(Math.random() * 5),
+      blocked: Math.floor(Math.random() * 15 + 3),
+    }));
+  }, []);
 
   const severityData = useMemo(() => {
     return [
@@ -100,17 +96,6 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* Blocked IPs stat card */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="cyber-card p-4 flex items-center gap-4">
-        <div className="p-3 rounded-lg bg-destructive/10">
-          <Ban className="w-6 h-6 text-destructive" />
-        </div>
-        <div>
-          <p className="text-2xl font-bold font-mono" style={{ color: '#f5f3ff' }}>{blockedIps.length}</p>
-          <p className="text-xs" style={{ color: '#c4b5fd' }}>Auto-Blocked IPs This Session</p>
-        </div>
-      </motion.div>
-
       {/* Charts Grid */}
       <div className="grid grid-cols-2 gap-4">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="cyber-card p-4">
@@ -150,7 +135,7 @@ const Analytics = () => {
               <Tooltip contentStyle={customTooltipStyle} />
               <Line type="monotone" dataKey="attacks" stroke="hsl(185,100%,50%)" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="critical" stroke="hsl(0,72%,55%)" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="blocked" stroke="hsl(0,72%,55%)" strokeWidth={2} dot={false} strokeDasharray="5 5" name="Blocked" />
+              <Line type="monotone" dataKey="blocked" stroke="hsl(142,70%,45%)" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </motion.div>
