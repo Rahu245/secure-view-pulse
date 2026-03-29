@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LogOut } from "lucide-react";
 
 const SettingsPage = () => {
-  const { alertsEnabled, setAlertsEnabled, setDataLoaded, setThreats } = useData();
+  const { alertsEnabled, setAlertsEnabled, setDataLoaded, setThreats, autoBlockCritical, setAutoBlockCritical } = useData();
   const { signOut } = useAuth();
 
   const handleReset = () => {
@@ -17,8 +17,19 @@ const SettingsPage = () => {
       <h2 className="text-lg font-bold text-foreground mb-4">Settings & Configuration</h2>
 
       <div className="cyber-card p-6">
-        <SettingsPanel alertsEnabled={alertsEnabled} onAlertsEnabledChange={setAlertsEnabled} />
+        <SettingsPanel
+          alertsEnabled={alertsEnabled}
+          onAlertsEnabledChange={setAlertsEnabled}
+          autoBlockCritical={autoBlockCritical}
+          onAutoBlockCriticalChange={setAutoBlockCritical}
+        />
       </div>
+
+      {!autoBlockCritical && (
+        <div className="rounded-lg border border-cyber-yellow/30 bg-cyber-yellow/5 px-4 py-3 text-xs" style={{ color: '#e9d5ff' }}>
+          ⚠️ Auto-block disabled — critical threats will no longer be blocked automatically
+        </div>
+      )}
 
       <div className="cyber-card p-4 space-y-3">
         <h3 className="text-sm font-semibold text-foreground">Data Management</h3>
