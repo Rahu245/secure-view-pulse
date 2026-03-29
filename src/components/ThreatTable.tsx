@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, ArrowUpDown, MapPin } from "lucide-react";
+import { Search, Filter, ArrowUpDown, MapPin, Ban } from "lucide-react";
 import type { ThreatData } from "@/data/mockThreats";
+import { useData } from "@/contexts/DataContext";
 
 interface ThreatTableProps {
   threats: ThreatData[];
 }
 
 const ThreatTable = ({ threats }: ThreatTableProps) => {
+  const { blockedIps } = useData();
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<'timestamp' | 'severity'>('timestamp');
@@ -103,9 +105,15 @@ const ThreatTable = ({ threats }: ThreatTableProps) => {
                   </a>
                 </td>
                 <td className="py-2 px-2">
-                  <span className={`severity-${t.severity} font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-muted`}>
-                    {t.severity}
-                  </span>
+                  {blockedIps.includes(t.attackerIp) ? (
+                    <span className="font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-destructive/20 text-destructive flex items-center gap-1 w-fit">
+                      <Ban className="w-3 h-3" /> BLOCKED
+                    </span>
+                  ) : (
+                    <span className={`severity-${t.severity} font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-muted`}>
+                      {t.severity}
+                    </span>
+                  )}
                 </td>
                 <td className="py-2 px-2 text-muted-foreground font-mono">{new Date(t.timestamp).toLocaleTimeString()}</td>
               </tr>
