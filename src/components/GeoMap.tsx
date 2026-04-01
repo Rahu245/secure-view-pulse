@@ -5,6 +5,7 @@ import type { ThreatData } from "@/data/mockThreats";
 
 interface GeoMapProps {
   threats: ThreatData[];
+  blockedIps?: string[];
 }
 
 const severityColors: Record<string, string> = {
@@ -28,30 +29,32 @@ function curvedPoints(from: [number, number], to: [number, number], segments = 3
   return points;
 }
 
-const GeoMap = ({ threats }: GeoMapProps) => {
+const GeoMap = ({ threats, blockedIps = [] }: GeoMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const blockedSet = useMemo(() => new Set(blockedIps), [blockedIps]);
 
   const displayThreats = useMemo(() => threats.slice(0, 25), [threats]);
 
   const attackOrigins = useMemo(() => {
-    const origins: Record<string, { coords: [number, number]; count: number; maxSeverity: string; country: string }> = {};
+    const origins: Record<string, { coords: [number, number]; count: number; maxSeverity: string; country: string; blocked: boolean }> = {};
     const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
     displayThreats.forEach(t => {
       const key = t.country;
+      const isBlocked = blockedSet.has(t.attackerIp);
       if (!origins[key]) {
-        origins[key] = { coords: t.attackerCoords, count: 0, maxSeverity: t.severity, country: t.country };
+        origins[key] = { coords: t.attackerCoords, count: 0, maxSeverity: t.severity, country: t.country, blocked: isBlocked };
       }
       origins[key].count++;
+      if (isBlocked) origins[key].blocked = true;
       if (severityOrder[t.severity as keyof typeof severityOrder] < severityOrder[origins[key].maxSeverity as keyof typeof severityOrder]) {
         origins[key].maxSeverity = t.severity;
       }
     });
     return Object.values(origins);
-  }, [displayThreats]);
+  }, [displayThreats, blockedSet]);
 
-  // Initialize map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -75,44 +78,42 @@ const GeoMap = ({ threats }: GeoMapProps) => {
     };
   }, []);
 
-  // Update markers/lines when threats change
   useEffect(() => {
     if (!layerRef.current) return;
     layerRef.current.clearLayers();
 
-    // Attack arc lines
     displayThreats.forEach((t) => {
+      const isBlocked = blockedSet.has(t.attackerIp);
       const points = curvedPoints(t.attackerCoords, t.targetCoords);
       L.polyline(points, {
-        color: severityColors[t.severity],
+        color: isBlocked ? '#991b1b' : severityColors[t.severity],
         weight: t.severity === 'critical' ? 2.5 : 1.5,
-        opacity: 0.5,
-        dashArray: '6 4',
+        opacity: isBlocked ? 0.3 : 0.5,
+        dashArray: isBlocked ? '3 6' : '6 4',
       }).addTo(layerRef.current!);
     });
 
-    // Origin markers
     attackOrigins.forEach((origin) => {
       const marker = L.circleMarker(origin.coords, {
         radius: Math.min(origin.count * 3 + 5, 20),
-        color: '#c4b5fd',
-        fillColor: severityColors[origin.maxSeverity],
-        fillOpacity: 0.35,
+        color: origin.blocked ? '#dc2626' : '#c4b5fd',
+        fillColor: origin.blocked ? '#991b1b' : severityColors[origin.maxSeverity],
+        fillOpacity: origin.blocked ? 0.5 : 0.35,
         weight: 2,
         opacity: 0.8,
       }).addTo(layerRef.current!);
 
       marker.bindTooltip(
         `<div style="font-family: JetBrains Mono, monospace; font-size: 11px; color: #c4b5fd;">
-          <div style="font-weight: bold; color: #e9d5ff;">${origin.country}</div>
+          <div style="font-weight: bold; color: #e9d5ff;">${origin.blocked ? '🚫 ' : ''}${origin.country}</div>
           <div>Attacks: ${origin.count}</div>
+          ${origin.blocked ? '<div style="color: #ef4444; font-weight: bold;">BLOCKED</div>' : ''}
           <div>Max Severity: <span style="color: ${severityColors[origin.maxSeverity]}; text-transform: uppercase; font-weight: bold;">${origin.maxSeverity}</span></div>
         </div>`,
         { className: 'cyber-tooltip' }
       );
     });
 
-    // Target markers
     displayThreats.forEach((t) => {
       const marker = L.circleMarker(t.targetCoords, {
         radius: 3,
@@ -131,19 +132,11 @@ const GeoMap = ({ threats }: GeoMapProps) => {
         { className: 'cyber-tooltip' }
       );
     });
-  }, [displayThreats, attackOrigins]);
+  }, [displayThreats, attackOrigins, blockedSet]);
 
-  const handleRecenter = () => {
-    mapRef.current?.setView([25, 10], 2, { animate: true });
-  };
-
-  const handleZoomIn = () => {
-    mapRef.current?.zoomIn(1, { animate: true });
-  };
-
-  const handleZoomOut = () => {
-    mapRef.current?.zoomOut(1, { animate: true });
-  };
+  const handleRecenter = () => { mapRef.current?.setView([25, 10], 2, { animate: true }); };
+  const handleZoomIn = () => { mapRef.current?.zoomIn(1, { animate: true }); };
+  const handleZoomOut = () => { mapRef.current?.zoomOut(1, { animate: true }); };
 
   return (
     <div className="cyber-card overflow-hidden relative">
@@ -162,12 +155,21 @@ const GeoMap = ({ threats }: GeoMapProps) => {
                 <span className="capitalize" style={{ color: '#a78bfa' }}>{level}</span>
               </div>
             ))}
+            {blockedIps.length > 0 && (
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-destructive" style={{ boxShadow: '0 0 8px rgba(220,38,38,0.4)' }} />
+                <span style={{ color: '#a78bfa' }}>blocked</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
       <div className="absolute top-12 right-4 z-10 flex flex-col gap-1 text-[10px] font-mono rounded-lg p-2" style={{ background: 'rgba(26, 15, 60, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid #4c1d9540', color: '#a78bfa' }}>
         <div>Live Threats: <span className="font-bold" style={{ color: '#c4b5fd' }}>{displayThreats.length}</span></div>
         <div>Origins: <span className="font-bold" style={{ color: '#c4b5fd' }}>{attackOrigins.length}</span></div>
+        {blockedIps.length > 0 && (
+          <div>Blocked: <span className="font-bold text-destructive">{blockedIps.length}</span></div>
+        )}
       </div>
       <div
         ref={containerRef}
