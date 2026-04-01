@@ -4,12 +4,14 @@ import type { ThreatData } from "@/data/mockThreats";
 
 interface ThreatTableProps {
   threats: ThreatData[];
+  blockedIps?: string[];
 }
 
-const ThreatTable = ({ threats }: ThreatTableProps) => {
+const ThreatTable = ({ threats, blockedIps = [] }: ThreatTableProps) => {
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<'timestamp' | 'severity'>('timestamp');
+  const blockedSet = useMemo(() => new Set(blockedIps), [blockedIps]);
 
   const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
 
@@ -77,39 +79,48 @@ const ThreatTable = ({ threats }: ThreatTableProps) => {
               <th className="text-left py-2 px-2 font-medium">Device</th>
               <th className="text-left py-2 px-2 font-medium">Country</th>
               <th className="text-left py-2 px-2 font-medium">Location</th>
-              <th className="text-left py-2 px-2 font-medium">Severity</th>
+              <th className="text-left py-2 px-2 font-medium">Status</th>
               <th className="text-left py-2 px-2 font-medium">Time</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.slice(0, 15).map((t) => (
-              <tr key={t.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                <td className="py-2 px-2 font-mono text-destructive">{t.attackerIp}</td>
-                <td className="py-2 px-2 font-mono text-primary">{t.targetIp}</td>
-                <td className="py-2 px-2 font-mono">{t.port}</td>
-                <td className="py-2 px-2">{t.attackType}</td>
-                <td className="py-2 px-2 text-muted-foreground">{t.device}</td>
-                <td className="py-2 px-2">{t.country}</td>
-                <td className="py-2 px-2">
-                  <a
-                    href={`https://www.google.com/maps?q=${t.attackerCoords[0]},${t.attackerCoords[1]}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
-                    title="View on Google Maps"
-                  >
-                    <MapPin className="w-3 h-3" />
-                    <span className="font-mono text-[10px]">{t.attackerCoords[0].toFixed(1)}, {t.attackerCoords[1].toFixed(1)}</span>
-                  </a>
-                </td>
-                <td className="py-2 px-2">
-                  <span className={`severity-${t.severity} font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-muted`}>
-                    {t.severity}
-                  </span>
-                </td>
-                <td className="py-2 px-2 text-muted-foreground font-mono">{new Date(t.timestamp).toLocaleTimeString()}</td>
-              </tr>
-            ))}
+            {filtered.slice(0, 15).map((t) => {
+              const isBlocked = blockedSet.has(t.attackerIp);
+              return (
+                <tr key={t.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${isBlocked ? 'opacity-60' : ''}`}>
+                  <td className="py-2 px-2 font-mono text-destructive">{t.attackerIp}</td>
+                  <td className="py-2 px-2 font-mono text-primary">{t.targetIp}</td>
+                  <td className="py-2 px-2 font-mono">{t.port}</td>
+                  <td className="py-2 px-2">{t.attackType}</td>
+                  <td className="py-2 px-2 text-muted-foreground">{t.device}</td>
+                  <td className="py-2 px-2">{t.country}</td>
+                  <td className="py-2 px-2">
+                    <a
+                      href={`https://www.google.com/maps?q=${t.attackerCoords[0]},${t.attackerCoords[1]}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
+                      title="View on Google Maps"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span className="font-mono text-[10px]">{t.attackerCoords[0].toFixed(1)}, {t.attackerCoords[1].toFixed(1)}</span>
+                    </a>
+                  </td>
+                  <td className="py-2 px-2">
+                    {isBlocked ? (
+                      <span className="font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-destructive/20 text-destructive border border-destructive/30">
+                        🚫 BLOCKED
+                      </span>
+                    ) : (
+                      <span className={`severity-${t.severity} font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-muted`}>
+                        {t.severity}
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-2 px-2 text-muted-foreground font-mono">{new Date(t.timestamp).toLocaleTimeString()}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

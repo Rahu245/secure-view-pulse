@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import GeoMap from "@/components/GeoMap";
 import ThreatTable from "@/components/ThreatTable";
 import AttackHistory from "@/components/AttackHistory";
@@ -9,18 +9,19 @@ import { useData } from "@/contexts/DataContext";
 import { useState } from "react";
 import { ChevronDown, Globe, Upload, Radio, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Index = () => {
-  const { dataLoaded, setDataLoaded, threats, setThreats, alertsEnabled } = useData();
+  const { dataLoaded, setDataLoaded, threats, setThreats, alertsEnabled, autoBlockCritical, blockedIps, addBlockedIp } = useData();
   const [selectedCountry, setSelectedCountry] = useState("all");
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const processedIdsRef = useRef<Set<string>>(new Set());
 
   // Simulate live incoming threats when data is loaded
   useEffect(() => {
     if (!dataLoaded) return;
     if (threats.length === 0) {
-      // Initialize with mock threats
       const t = [...mockThreats];
       for (let i = 0; i < 10; i++) t.unshift(generateThreat());
       setThreats(t);
@@ -35,12 +36,24 @@ const Index = () => {
     return () => clearInterval(interval);
   }, [dataLoaded]);
 
+  // Auto-block critical threats
+  useEffect(() => {
+    if (!autoBlockCritical || threats.length === 0) return;
+    threats.forEach(t => {
+      if (t.severity === 'critical' && !blockedIps.includes(t.attackerIp) && !processedIdsRef.current.has(t.id)) {
+        processedIdsRef.current.add(t.id);
+        addBlockedIp(t.attackerIp);
+        toast.error(`🚫 Auto-blocked CRITICAL threat: ${t.attackerIp}`);
+      }
+    });
+  }, [threats, autoBlockCritical, blockedIps, addBlockedIp]);
+
   const filteredThreats = useMemo(() => {
     if (selectedCountry === "all") return threats;
     return threats.filter(t => t.country === selectedCountry || t.targetCountry === selectedCountry);
   }, [threats, selectedCountry]);
 
-  // Data gate — show setup screen if no data loaded
+  // Data gate
   if (!dataLoaded) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-8 max-w-lg mx-auto text-center">
@@ -54,18 +67,12 @@ const Index = () => {
           </p>
         </div>
         <div className="grid grid-cols-3 gap-4 w-full">
-          <button
-            onClick={() => navigate("/upload")}
-            className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group"
-          >
+          <button onClick={() => navigate("/upload")} className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group">
             <Upload className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
             <span className="text-sm font-medium text-foreground">Upload Data</span>
             <span className="text-[10px] text-muted-foreground">CSV or JSON files</span>
           </button>
-          <button
-            onClick={() => navigate("/live-api")}
-            className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group"
-          >
+          <button onClick={() => navigate("/live-api")} className="cyber-card p-6 flex flex-col items-center gap-3 hover:border-primary/40 transition-colors cursor-pointer group">
             <Radio className="w-8 h-8 text-secondary group-hover:scale-110 transition-transform" />
             <span className="text-sm font-medium text-foreground">Connect API</span>
             <span className="text-[10px] text-muted-foreground">Live threat feed</span>
@@ -90,8 +97,15 @@ const Index = () => {
 
   return (
     <div className="space-y-4">
-      {/* Stats */}
-      <StatsBar threats={filteredThreats} />
+      <StatsBar threats={filteredThreats} blockedIps={blockedIps} />
+
+      {!autoBlockCritical && blockedIps.length > 0 && (
+        <div className="cyber-card p-2 border-cyber-yellow/30 bg-cyber-yellow/5">
+          <p className="text-[10px] text-cyber-yellow text-center">
+            ⚠️ Auto-block disabled — critical threats will no longer be blocked automatically
+          </p>
+        </div>
+      )}
 
       {/* Country Dropdown */}
       <div className="flex items-center gap-3">
@@ -147,9 +161,9 @@ const Index = () => {
         )}
       </div>
 
-      <GeoMap threats={filteredThreats} />
-      <AttackHistory threats={filteredThreats} />
-      <ThreatTable threats={filteredThreats} />
+      <GeoMap threats={filteredThreats} blockedIps={blockedIps} />
+      <AttackHistory threats={filteredThreats} blockedIps={blockedIps} />
+      <ThreatTable threats={filteredThreats} blockedIps={blockedIps} />
 
       {alertsEnabled && <AlertSystem threats={filteredThreats} />}
     </div>

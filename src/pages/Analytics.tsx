@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
+  PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, Legend
 } from "recharts";
-import { Download } from "lucide-react";
+import { Download, Ban } from "lucide-react";
 import { ATTACK_TYPES, COUNTRIES } from "@/data/mockThreats";
 import { useData } from "@/contexts/DataContext";
+
 const CHART_COLORS = ['hsl(185,100%,50%)', 'hsl(217,91%,60%)', 'hsl(0,72%,55%)', 'hsl(45,93%,58%)', 'hsl(142,70%,45%)', 'hsl(280,60%,55%)', 'hsl(30,80%,55%)', 'hsl(200,60%,50%)'];
 
 const Analytics = () => {
@@ -15,7 +16,8 @@ const Analytics = () => {
   const [timeRange, setTimeRange] = useState('24h');
   const [countryFilter, setCountryFilter] = useState('all');
 
-  const { threats } = useData();
+  const { threats, blockedIps } = useData();
+  const blockedSet = useMemo(() => new Set(blockedIps), [blockedIps]);
 
   const attackTypeData = useMemo(() => {
     return ATTACK_TYPES.map(type => ({
@@ -32,13 +34,17 @@ const Analytics = () => {
   }, [threats]);
 
   const trendData = useMemo(() => {
-    return Array.from({ length: 24 }, (_, i) => ({
-      hour: `${i}:00`,
-      attacks: Math.floor(Math.random() * 20 + 5),
-      critical: Math.floor(Math.random() * 5),
-      blocked: Math.floor(Math.random() * 15 + 3),
-    }));
-  }, []);
+    return Array.from({ length: 24 }, (_, i) => {
+      const hourThreats = threats.filter(() => Math.floor(Math.random() * 24) === i);
+      const blocked = hourThreats.filter(t => blockedSet.has(t.attackerIp)).length;
+      return {
+        hour: `${i}:00`,
+        attacks: Math.floor(Math.random() * 20 + 5),
+        critical: Math.floor(Math.random() * 5),
+        blocked: blockedIps.length > 0 ? Math.floor(Math.random() * Math.min(blockedIps.length, 8)) : 0,
+      };
+    });
+  }, [threats, blockedIps]);
 
   const severityData = useMemo(() => {
     return [
@@ -70,6 +76,12 @@ const Analytics = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold" style={{ color: '#e9d5ff' }}>Threat <span className="text-primary">Analytics</span></h1>
         <div className="flex items-center gap-2">
+          {blockedIps.length > 0 && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/10 border border-destructive/30">
+              <Ban className="w-3.5 h-3.5 text-destructive" />
+              <span className="text-xs font-bold text-destructive">{blockedIps.length} Blocked</span>
+            </div>
+          )}
           <select
             value={timeRange}
             onChange={e => setTimeRange(e.target.value)}
@@ -133,9 +145,12 @@ const Analytics = () => {
               <XAxis dataKey="hour" tick={{ fontSize: 10, fill: '#a78bfa' }} />
               <YAxis tick={{ fontSize: 10, fill: '#a78bfa' }} />
               <Tooltip contentStyle={customTooltipStyle} />
-              <Line type="monotone" dataKey="attacks" stroke="hsl(185,100%,50%)" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="critical" stroke="hsl(0,72%,55%)" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="blocked" stroke="hsl(142,70%,45%)" strokeWidth={2} dot={false} />
+              <Legend wrapperStyle={{ fontSize: 10 }} />
+              <Line type="monotone" dataKey="attacks" stroke="hsl(185,100%,50%)" strokeWidth={2} dot={false} name="Attacks" />
+              <Line type="monotone" dataKey="critical" stroke="hsl(0,72%,55%)" strokeWidth={2} dot={false} name="Critical" />
+              {blockedIps.length > 0 && (
+                <Line type="monotone" dataKey="blocked" stroke="#dc2626" strokeWidth={2} dot={false} strokeDasharray="5 3" name="Blocked" />
+              )}
             </LineChart>
           </ResponsiveContainer>
         </motion.div>
