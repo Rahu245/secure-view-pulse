@@ -36,7 +36,22 @@ const AiRecommendations = () => {
     }
   };
 
-  useEffect(() => { analyze(); }, []);
+  useEffect(() => {
+    if (threats.length > 0 && threats.length !== lastAnalyzedCount.current) {
+      lastAnalyzedCount.current = threats.length;
+      analyze();
+    }
+  }, [threats.length]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (threats.length > 0 && threats.length !== lastAnalyzedCount.current && !loading) {
+        lastAnalyzedCount.current = threats.length;
+        analyze();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [threats.length, loading]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
