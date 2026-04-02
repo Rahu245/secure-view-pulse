@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ShieldCheck, RefreshCw } from "lucide-react";
-import { mockThreats, generateThreat } from "@/data/mockThreats";
+import { useData } from "@/contexts/DataContext";
 import { streamAI } from "@/lib/streamAI";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
 const AiRecommendations = () => {
-  const [threats] = useState(() => {
-    const t = [...mockThreats];
-    for (let i = 0; i < 20; i++) t.unshift(generateThreat());
-    return t;
-  });
+  const { threats } = useData();
   const [recommendations, setRecommendations] = useState("");
+  const lastAnalyzedCount = useRef(0);
   const [loading, setLoading] = useState(false);
 
   const analyze = async () => {
